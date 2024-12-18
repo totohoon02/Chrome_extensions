@@ -12,7 +12,7 @@ python docter.py "absolute-path-for-controller"
 
 ```python
 # For windows, use dobule quote "<path>"
-python docter.py "C:/project/~~~/controller/TestController.java"
+python docter.py -p "C:/project/~~~/controller/TestController.java"
 ```
 
 ```java
