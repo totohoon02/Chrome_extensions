@@ -39,7 +39,7 @@ public class TestController implements TestControllerDocs {
 }
 ```
 
-and then, swager doc for TestController will be auto-generate. (./docs/TestControllerDocs.java)
+and then, swagger doc for TestController will be auto-generate. (./docs/TestControllerDocs.java)
 
 ```java
 @Tag(name = "TestController", description = "")
@@ -60,3 +60,4 @@ public interface TestControllerDocs {
 ```
 
 - You have to import some packages..
+- Implements Doc
