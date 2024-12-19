@@ -61,3 +61,7 @@ public interface TestControllerDocs {
 
 - You have to import some packages..
 - Implements Doc
+
+```bash
+implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+```
