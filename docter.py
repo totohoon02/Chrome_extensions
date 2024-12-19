@@ -29,9 +29,9 @@ with open(path, 'r', encoding='utf-8') as f:
         if(line.startswith("public") and not line.startswith("public class")):
             strs = lines[i].strip()
             while True:
-                i += 1
-                if lines[i].strip().startswith("return"):
+                if lines[i].strip().endswith('{'):
                     break
+                i += 1
                 strs += " " + lines[i].strip()
             strs = strs.replace("{", "")
             strs = strs.replace("public ", "")
