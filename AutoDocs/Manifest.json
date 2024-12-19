@@ -1,0 +1,9 @@
+{
+    "name": "AutoDocs - Swagger for Spring",
+    "description": "Generate Document from Cotroller",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }
