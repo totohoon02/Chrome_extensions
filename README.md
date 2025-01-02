@@ -65,3 +65,13 @@ public interface TestControllerDocs {
 ```bash
 implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 ```
+### Chrome Extenstion
+http://chromewebstore.google.com/detail/janheenihmcdejeacenaigomgomlpkaj
+- 컨트롤러 코드를 복사/업로드
+- copy/download 버튼 클릭
+- <name>Docs.java 파일 생성
+- 컨트롤러에 implements
+- Copy / Upload *Controller.java
+- Click copy/download button
+- Create *ControllerDocs.java
+- implements *ControllerDocs on *Controller 
