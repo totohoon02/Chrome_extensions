@@ -7,8 +7,25 @@
 </head>
 <body>
     <link rel="stylesheet" href="css/style.css">
+    <label for="doctype">Type</label>
+    <form action="#">
+        <select name="languages" id="doctype">
+          <option value="swagger">Swagger</option>
+          <option value="service">Service</option>
+          <option value="repository">Repository</option>
+        </select>
+    </form>
+
+    <div class="inputBox">
+        <label for="javafile">File Upload</label>
+        <input type="file" accept=".java" name="javafile" id="javafile">
     
-    <input type="file" accept=".java" name="javafile" id="javafile">
+        <label for="javatext">With Text</label>
+        <textarea name="" id="javatext"></textarea>
+        <label for="result">Result</label>
+        <textarea name="" id="result" readonly="true"></textarea>
+    </div>
+    
     <div class="container">
         <button id="btn_copy">copy</button>
         <button id="btn_download">download</button>
@@ -16,3 +33,4 @@
     <script src="scripts/popup.js"></script>
 </body>
 </html>
+
