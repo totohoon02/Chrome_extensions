@@ -1,6 +1,39 @@
+body{
+    background-color: black;
+}
+
 button{
     width: 40vw;
-    height: 40vh;
+    height: 10vh;
+}
+label{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: white;
+}
+input{
+    color: white
+}
+
+.inputBox{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 300px;
+}
+
+#javatext{
+    width: 100%;
+    height: 30px;
+    resize: none;
+}
+
+#result{
+    width: 100%;
+    height: 100px;
+    overflow: visible;
+    resize: none;
 }
 
 .container{
@@ -8,7 +41,4 @@ button{
     justify-content: space-around;
     margin-top: 10px;
     padding: 5px;
-}
-button{
-    display: none;
 }
