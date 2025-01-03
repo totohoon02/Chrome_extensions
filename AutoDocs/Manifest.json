@@ -1,9 +1,15 @@
 {
-    "name": "AutoDocs - Swagger for Spring",
-    "description": "Generate Document from Cotroller",
-    "version": "1.0",
+    "name": "AutoDocs - Swagger, Interface for Spring",
+    "description": "Generate abstract from implements ",
+    "version": "1.1",
     "manifest_version": 3,
     "action": {
       "default_popup": "popup.html"
+    },
+    "icons":{
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "64": "icon64.png",
+      "128": "icon128.png"
     }
   }
