@@ -1,0 +1,68 @@
+body {
+    width: 300px;
+    padding: 20px;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.select-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dropdown {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.dropdown:hover {
+    border-color: #666;
+}
+
+.dropdown:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
+}
+
+#btn_download {
+    padding: 8px 16px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#btn_download:hover {
+    background-color: #357abd;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+h1 a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+h1 a:hover {
+    color: var(--primary-color);
+}
+
+h1 span {
+    cursor: help;
+}

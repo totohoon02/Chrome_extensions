@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <link rel="stylesheet" href="css/style.css">
-    <label for="doctype">Type</label>
-    <form action="#">
-        <select name="languages" id="doctype">
-          <option value="swagger">Swagger</option>
-          <option value="service">Service</option>
-          <option value="repository">Repository</option>
-        </select>
-    </form>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>AutoDocs</title>
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<div class="app-container">
+			<div class="form-group">
+				<label for="doctype">Document Type</label>
+				<select name="languages" id="doctype" class="select-input">
+					<option value="swagger">Swagger</option>
+					<option value="service">Service</option>
+					<option value="repository">Repository</option>
+					<option value="pyservice">PyService</option>
+				</select>
+			</div>
 
-    <div class="inputBox">
-        <label for="javafile">File Upload</label>
-        <input type="file" accept=".java" name="javafile" id="javafile">
-    
-        <label for="javatext">With Text</label>
-        <textarea name="" id="javatext"></textarea>
-        <label for="result">Result</label>
-        <textarea name="" id="result" readonly="true"></textarea>
-    </div>
-    
-    <div class="container">
-        <button id="btn_copy">copy</button>
-        <button id="btn_download">download</button>
-    </div>
-    <script src="scripts/popup.js"></script>
-</body>
+			<div class="form-group">
+				<label for="javafile">File Upload</label>
+				<input type="file" accept=".java" name="javafile" id="javafile" class="file-input" />
+			</div>
+
+			<div class="form-group">
+				<label for="javatext">Input Text</label>
+				<textarea name="" id="javatext" class="text-area" placeholder="Enter your Code here..."></textarea>
+			</div>
+
+			<div class="form-group">
+				<label for="result">Result</label>
+				<textarea name="" id="result" class="text-area result-area" readonly="true"></textarea>
+			</div>
+
+			<div class="button-container">
+				<button id="btn_copy" class="btn btn-secondary">Copy</button>
+				<button id="btn_download" class="btn btn-primary">Download</button>
+			</div>
+		</div>
+		<script src="scripts/popup.js"></script>
+	</body>
 </html>
-
