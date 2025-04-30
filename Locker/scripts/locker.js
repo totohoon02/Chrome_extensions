@@ -1,31 +1,43 @@
-const fileStructure = {
-    config: [
-        'chromaConfig.yml',
-        'elasticConfig.yml',
-        'ollamaConfig.yml',
-        'sqliteConfig.yml',
-        'swaggerConfig.yml',
-        'ruff.toml'
-    ],
-    docker: [
-        'airflow',
-        'chromadb',
-        'elastic8',
-        'kafka',
-        'mongodb',
-        'mysql',
-        'nginx',
-        'n8n',
-        'ollama',
-        'postgre',
-        'redis'
-    ],
-    java: [
-        'SwaggerConfig.java'
-    ]
-};
+async function getFilesStructure() {
+    const owner = 'totohoon02';
+    const repo = 'locker';
+    const url = `https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`;
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    const files = data.tree.filter(item => item.type === 'blob').map(item => item.path);
+    
 
-document.addEventListener('DOMContentLoaded', () => {
+    let fileStructure = {};
+
+    for(const file of files){
+        if(file == "README.md" || file == "help.txt"){
+            continue;
+        }
+        const split = file.split('/');
+        const category = split.length > 1 ? split[0] : 'config';
+        const fileName = split.length > 1 ? split[1] : split[0];
+
+        if (!fileStructure[category]) {
+            fileStructure[category] = new Set();
+        }
+        
+        fileStructure[category].add(fileName);
+    }
+    
+    for(const key in fileStructure) {
+        fileStructure[key] = Array.from(fileStructure[key]);
+    }
+
+    return fileStructure;
+}
+
+
+let fileStructure = {};
+
+document.addEventListener('DOMContentLoaded', async () => {
+    fileStructure = await getFilesStructure();
+
     const mainCategory = document.getElementById('mainCategory');
     const subCategory = document.getElementById('subCategory');
     const downloadBtn = document.getElementById('btn_download');
