@@ -1,140 +1,153 @@
-const input_file = document.querySelector("#javafile");
-const input_text = document.querySelector("#javatext");
-const result = document.querySelector("#result");
-const btn_copy = document.querySelector("#btn_copy");
-const btn_download = document.querySelector("#btn_download");
-const select = document.querySelector("#doctype");
+// ===== DOM 요소 =====
+const inputFile = document.querySelector("#javafile");
+const inputText = document.querySelector("#javatext");
+const resultBox = document.querySelector("#result");
+const btnCopy = document.querySelector("#btn_copy");
+const btnDownload = document.querySelector("#btn_download");
+const selectType = document.querySelector("#doctype");
 
+// ===== 상태 =====
 let template = "";
 let className = "";
 let suffix = "Docs";
 let doctype = "swagger";
-let rtn_text = [];
+let rtnText = [];
 
-select.addEventListener("change", (event) => {
-	const value = event.target.value;
-	if (value == "swagger") {
-		suffix = "Docs";
-		doctype = "swagger";
-	} else if (value == "service") {
-		suffix = "";
-		doctype = "service";
-	} else if (value == "repository") {
-		suffix = "";
-		doctype = "service";
-	} else if (value == "pyservice") {
-		suffix = "";
-		doctype = "pyservice";
-	}
+// ===== 도큐먼트 타입 선택 =====
+selectType.addEventListener("change", (e) => {
+	doctype = e.target.value;
+	suffix = ["swagger"].includes(doctype) ? "Docs" : "";
 });
 
-btn_copy.addEventListener("click", function () {
-	if (className == "" || template == "") return;
-	alert("Copied!!");
+// ===== 복사 기능 =====
+btnCopy.addEventListener("click", () => {
+	if (!className || !template) return;
 	navigator.clipboard.writeText(template);
+	alert("Copied!");
 });
 
-btn_download.addEventListener("click", function () {
-	if (className == "" || template == "") return;
-	alert("Download!");
+// ===== 다운로드 기능 =====
+btnDownload.addEventListener("click", () => {
+	if (!className || !template) return;
 	const blob = new Blob([template], { type: "text/plain" });
 	const link = document.createElement("a");
 	link.href = URL.createObjectURL(blob);
-	link.download = `${className}${suffix}.java`;
+	link.download = `${className}${suffix}.${
+		doctype === "pyservice" ? "py" : "java"
+	}`;
 	link.click();
+	alert("Download!");
 });
 
-input_text.addEventListener("input", function (ev) {
-	input_file.value = "";
-	let code = ev.target.value;
-	generate(code);
-	result.value = template;
+// ===== 텍스트 입력 =====
+inputText.addEventListener("input", (e) => {
+	inputFile.value = "";
+	const code = e.target.value;
+	template =
+		doctype === "pyservice" ? parsePythonInterface(code) : parseJavaClass(code);
+	resultBox.value = template;
 });
 
-input_file.addEventListener("change", function (ev) {
-	input_text.value = "";
-	const file = ev.target.files[0];
-
+// ===== 파일 입력 =====
+inputFile.addEventListener("change", (e) => {
+	inputText.value = "";
+	const file = e.target.files[0];
 	if (!file) return;
-
 	const reader = new FileReader();
-
-	reader.onload = function (ev) {
-		if (ev.target.result) {
-			let code = ev.target.result;
-			generate(code);
-			result.value = template;
-		}
+	reader.onload = (e) => {
+		const code = e.target.result;
+		template =
+			doctype === "pyservice"
+				? parsePythonInterface(code)
+				: parseJavaClass(code);
+		resultBox.value = template;
 	};
-
 	reader.readAsText(file);
 });
 
-function generate(code) {
-	let lines = code.split("\n");
-	let temp_text = "";
-	rtn_text = [];
+// ===== Java Class 인터페이스 or Swagger 생성 =====
+function parseJavaClass(code) {
+	const lines = code.split("\n");
+	let temp = "";
+	rtnText = [];
+	className = "";
 
-	// read file
 	for (let i = 0; i < lines.length; i++) {
 		let line = lines[i].trim();
-
-		if (!line.startsWith("public")) {
-			continue;
-		}
-
 		if (line.startsWith("public class")) {
-			line = line.replace("public class", "");
-			line = line.replace(" {", "");
-			className = line.trim();
+			className = line
+				.replace("public class", "")
+				.replace("{", "")
+				.trim()
+				.replace(/Impl$/, ""); // ✅ Impl 제거
 			continue;
 		}
+		if (!line.startsWith("public")) continue;
 
-		while (true) {
-			temp_text += lines[i].trim();
-			if (temp_text.endsWith("{")) break;
+		while (!lines[i].trim().endsWith("{")) {
+			temp += lines[i].trim() + " ";
 			i++;
 		}
-		temp_text = temp_text.replace(",", ", ");
-		temp_text = temp_text.replace("public", "");
-		temp_text = temp_text.replace("{", "");
-		temp_text = temp_text.trim() + ";";
-
-		rtn_text.push(temp_text);
-		temp_text = "";
+		temp += lines[i].trim();
+		temp =
+			temp.replace("public", "").replace("{", "").replace(",", ", ").trim() +
+			";";
+		rtnText.push(temp);
+		temp = "";
 	}
 
-	if (doctype == "swagger") {
-		swagger_template();
-	} else if (doctype == "pyservice") {
-		pyservice_template();
-	} else {
-		interface_template();
-	}
+	return doctype === "swagger"
+		? buildSwaggerTemplate()
+		: buildJavaInterfaceTemplate();
 }
 
-function swagger_template() {
-	template = `@Tag(name = "${className}", description = "")\n`;
-	template += `public interface ${className}${suffix} {\n`;
-
-	for (let i = 0; i < rtn_text.length; i++) {
-		template += "\t" + `@Operation(summary = "", description = "")\n`;
-		template += "\t" + rtn_text[i] + "\n";
-		template += "\n";
+function buildSwaggerTemplate() {
+	let result = `@Tag(name = "${className}", description = "")\n`;
+	result += `public interface ${className}${suffix} {\n`;
+	for (const line of rtnText) {
+		result += `\t@Operation(summary = "", description = "")\n\t${line}\n\n`;
 	}
-
-	template += "}";
+	return result + "}";
 }
 
-function interface_template() {
-	template = `public interface ${className}${suffix} {\n`;
-	for (let i = 0; i < rtn_text.length; i++) {
-		template += "\t" + rtn_text[i] + "\n";
-		template += "\n";
+function buildJavaInterfaceTemplate() {
+	let result = `public interface ${className}${suffix} {\n`;
+	for (const line of rtnText) {
+		result += `\t${line}\n\n`;
 	}
-	template += "}";
+	return result + "}";
 }
 
-function pyservice_template() {
-	template = "from abc import ABC, abstractmethod";
+// ===== Python Abstract Interface 생성 =====
+function parsePythonInterface(code) {
+	const lines = code.split("\n");
+	const result = ["from abc import ABC, abstractmethod", ""];
+	const classRegex = /^\s*class\s+(\w+)\s*(\([^\)]*\))?:/;
+	const defRegex = /^\s*def\s+(\w+)\s*\(([^)]*)\):/;
+	const asyncDefRegex = /^\s*async\s+def\s+(\w+)\s*\(([^)]*)\):/;
+
+	let insideClass = false;
+
+	for (const line of lines) {
+		const classMatch = classRegex.exec(line);
+		const defMatch = defRegex.exec(line);
+		const asyncMatch = asyncDefRegex.exec(line);
+
+		if (classMatch) {
+			className = classMatch[1].replace("Impl", "");
+			insideClass = true;
+			result.push(`class ${className}(ABC):`);
+		} else if (insideClass && (defMatch || asyncMatch)) {
+			const isAsync = !!asyncMatch;
+			const name = isAsync ? asyncMatch[1] : defMatch[1];
+			if (name === "__init__") continue;
+
+			const args = isAsync ? asyncMatch[2] : defMatch[2];
+			result.push(`\n\t@abstractmethod`);
+			result.push(`\t${isAsync ? "async " : ""}def ${name}(${args}):`);
+			result.push(`\t\tpass`);
+		}
+	}
+
+	return result.join("\n");
 }
