@@ -1,0 +1,13 @@
+{
+	"manifest_version": 3,
+	"name": "CLracker - 더클라임 트래커",
+	"version": "1.0",
+	"action": {
+	  "default_popup": "main.html",
+	  "default_icon": "icon/16.png"
+	},
+	"permissions": ["storage"],
+	"icons": {
+	}
+  }
+  
